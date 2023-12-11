@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title> jQuery-menu-aim Plugin Example </title>
+    <meta name="viewport" Content="width=device-width, initial-scale=1.0">
+    <meta name="description" content=" ">
+    <meta name="author" content=" ">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Lato&display=swap");
+
+        *,
+        ::before,
+        ::after {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        :focus:not(.focus-visible) {
+            outline: none;
+        }
+
+        :focus:not(:focus-visible) {
+            outline: none;
+        }
+
+        .focus-visible {
+            outline: .25rem solid orange;
+            outline-offset: .125em;
+        }
+
+        :focus-visible {
+            outline: .25rem solid orange;
+            outline-offset: .125em;
+        }
+
+        html,
+        body {
+            height: 100%;
+        }
+
+        body {
+            padding: 1rem;
+            margin: 0;
+            font-family: "Lato", sans-serif;
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        .catalog {
+            position: relative;
+            display: inline-block;
+        }
+
+        .catalog__navigation {
+            position: absolute;
+            top: calc(100% + 1.25rem);
+            left: 0;
+        }
+
+
+        .trigger {
+            display: -webkit-inline-box;
+            display: -ms-inline-flexbox;
+            display: inline-flex;
+            -webkit-column-gap: .75em;
+            -moz-column-gap: .75em;
+            column-gap: .75em;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            padding: .75em 1em;
+            margin: 0;
+            border: none;
+            border-radius: .25em;
+            color: inherit;
+            font-size: 1rem;
+            font-family: inherit;
+            background-color: lightpink;
+            cursor: pointer;
+            -webkit-appearance: button;
+            -moz-appearance: button;
+            appearance: button;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .trigger:hover {
+            background-color: pink;
+        }
+
+        .trigger__icon {
+            -ms-flex-negative: 0;
+            flex-shrink: 0;
+        }
+
+
+        .burger {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+        }
+
+        .burger--active .burger__bar {
+            background-color: transparent;
+        }
+
+        .burger--active .burger__bar::before {
+            -webkit-transform: translateY(.375em) rotate(45deg);
+            -ms-transform: translateY(.375em) rotate(45deg);
+            transform: translateY(.375em) rotate(45deg);
+        }
+
+        .burger--active .burger__bar::after {
+            -webkit-transform: translateY(-.375em) rotate(-45deg);
+            -ms-transform: translateY(-.375em) rotate(-45deg);
+            transform: translateY(-.375em) rotate(-45deg);
+        }
+
+        .burger__bar,
+        .burger__bar::before,
+        .burger__bar::after {
+            display: block;
+            width: 1em;
+            height: .125rem;
+            border-radius: .25rem;
+            background-color: currentColor;
+            -webkit-transition-property: background-color, -webkit-transform;
+            transition-property: background-color, -webkit-transform;
+            -o-transition-property: background-color, transform;
+            transition-property: background-color, transform;
+            transition-property: background-color, transform, -webkit-transform;
+            -webkit-transition-duration: .3s;
+            -o-transition-duration: .3s;
+            transition-duration: .3s;
+        }
+
+        .burger__bar {
+            position: relative;
+        }
+
+        .burger__bar::before,
+        .burger__bar::after {
+            content: "";
+            position: absolute;
+        }
+
+        .burger__bar::before {
+            top: -.375em;
+        }
+
+        .burger__bar::after {
+            bottom: -.375em;
+        }
+
+        .navigation {
+            -webkit-animation: slideUp .1s ease-out forwards;
+            animation: slideUp .1s ease-out forwards;
+        }
+
+        .navigation::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 1.5em;
+            width: 0;
+            height: 0;
+            margin-top: -.75em;
+            margin-left: -.75em;
+            border: .75em solid transparent;
+            border-top: 0;
+            border-bottom-color: white;
+        }
+
+        .navigation:not(.navigation--active) {
+            display: none;
+        }
+
+        @-webkit-keyframes slideUp {
+
+            from {
+                opacity: 0;
+                -webkit-transform: translateY(1em);
+                transform: translateY(1em);
+            }
+
+            to {
+                opacity: 1;
+                -webkit-transform: translateY(0);
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+
+            from {
+                opacity: 0;
+                -webkit-transform: translateY(1em);
+                transform: translateY(1em);
+            }
+
+            to {
+                opacity: 1;
+                -webkit-transform: translateY(0);
+                transform: translateY(0);
+            }
+        }
+
+        .list {
+            width: 16rem;
+            height: 100%;
+            padding: .5rem 0;
+            margin: 0;
+            border-radius: .25rem;
+            list-style: none;
+            background-color: white;
+            -webkit-box-shadow: 0 6px 18px rgba(14, 21, 47, 0.1), 0 -2px 6px rgba(14, 21, 47, 0.06);
+            box-shadow: 0 6px 18px rgba(14, 21, 47, 0.1), 0 -2px 6px rgba(14, 21, 47, 0.06);
+        }
+
+        .list__item {
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+        }
+
+        .list__item[focus-within]>.list__sublist-container {
+            display: block;
+        }
+
+        .list__item:focus-within>.list__sublist-container {
+            display: block;
+        }
+
+        .list__item--active>.list__link {
+            background-color: rgba(0, 0, 0, 0.04);
+        }
+
+        .list__item--active>.list__sublist-container {
+            display: block;
+        }
+
+        .list__item--has-sublist>.list__link {
+            padding-right: 1.75em;
+            background-repeat: no-repeat;
+            background-position: right .5em center;
+            background-size: .75em .75em;
+        }
+
+        .list__link {
+            width: 100%;
+            padding: .5em .75em;
+            margin: 0 .5em;
+            border-radius: .25em;
+            overflow: hidden;
+            color: rgba(0, 0, 0, 0.9);
+            white-space: nowrap;
+            text-decoration: none;
+            -o-text-overflow: ellipsis;
+            text-overflow: ellipsis;
+        }
+
+        .list__sublist-container {
+            position: absolute;
+            top: 0;
+            left: 100%;
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .list__sublist-container .list {
+            overflow-y: auto;
+        }
+
+        /* h1 {
+            line-height: 2em;
+            padding-bottom: 5px;
+            text-transform: none;
+            font-size: 1.7em;
+            font-weight: bold;
+            font-style: italic;
+            font-family: "Lucida Console", "Courier New", monospace;
+            color: #999;
+            letter-spacing: -0.005em;
+            word-spacing: 1px;
+            letter-spacing: none;
+        }
+
+        h2 {
+            margin-top: 40px;
+            text-transform: none;
+            font-size: 1.75em;
+            font-weight: bold;
+            font-family: "Lucida Console", "Courier New", monospace;
+            color: #999;
+            letter-spacing: -0.005em;
+            word-spacing: 1px;
+            letter-spacing: none;
+        } */
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="catalog">
+        <button class="catalog__trigger trigger" type="button"> <span class="trigger__icon burger"> <span
+                    class="burger__bar"> </span> </span> Catalog </button>
+        <nav class="catalog__navigation navigation">
+            <ul class="list">
+                <li class="list__item list__item--has-sublist"> <a class="list__link" href="#" title="Danh mục 1"> Danh
+                        mục 1 </a>
+                </li>
+                <li class="list__item list__item--has-sublist"> <a class="list__link" href="#" title="Danh mục 2"> Danh
+                        mục 2 </a>
+                    <div class="list__sublist-container">
+                        <ul class="list">
+                            <li class="list__item"> <a class="list__link" href="#" title="II. 1"> Danh mục 2.1
+                                </a>
+                            </li>
+                            <li class="list__item"> <a class="list__link" href="#" title="II. 2"> Danh mục 2.2 </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="list__item list__item--has-sublist"> <a class="list__link" href="#" title="Danh mục 3">
+                        Danh mục 3 </a>
+                    <div class="list__sublist-container">
+                        <ul class="list">
+                            <li class="list__item list__item--has-sublist"> <a class="list__link" href="#"
+                                    title="Danh mục 3.1"> Danh mục 3.1 </a>
+                                <div class="list__sublist-container">
+                                    <ul class="list">
+                                        <li class="list__item"> <a class="list__link" href="#" title="Mục 3.1.1"> Mục
+                                                3.1.1 </a>
+                                        </li>
+                                        <li class="list__item"> <a class="list__link" href="#" title="Mục 3.1.2">
+                                                Mục 3.1.2 </a>
+                                        </li>
+                                        <li class="list__item"> <a class="list__link" href="#" title="Mục 3.1.3">
+                                                Mục 3.1.3 </a>
+                                        </li>
+                                        <li class="list__item"> <a class="list__link" href="#" title="Mục 3.1.4"> Mục
+                                                3.1.4 </a>
+                                        </li>
+                                        <li class="list__item"> <a class="list__link" href="#" title="Mục 3.1.5"> Mục
+                                                3.1.5
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="list__item list__item--has-sublist"><a class="list__link" href="#"
+                                    title="Mục 3.2">Danh mục 3.2</a>
+                                <div class="list__sublist-container">
+                                    <ul class="list">
+                                        <li class="list__item"><a class="list__link" href="#" title="Mục 3.2.1">Mục
+                                                3.2.1</a>
+                                        </li>
+                                        <li class="list__item"><a class="list__link" href="#" title="Mục 3.2.2">Mục
+                                                3.2.2</a>
+                                        </li>
+                                        <li class="list__item"><a class="list__link" href="#" title="Mục 3.2.3">Mục
+                                                3.2.3</a>
+                                        </li>
+                                        <li class="list__item"><a class="list__link" href="#" title="Mục 3.2.4">Mục
+                                                3.2.4</a>
+                                        </li>
+                                        <li class="list__item"><a class="list__link" href="#" title="Mục 3.2.5">Mục
+                                                3.2.5</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="list__item"><a class="list__link" href="#" title="Danh mục 3.3">Danh mục 3.3</a>
+                            </li>
+                            <li class="list__item"><a class="list__link" href="#" title="Danh mục 3.4">Danh mục 3.4</a>
+                            </li>
+                            <li class="list__item"><a class="list__link" href="#" title="Danh mục 3.5">Danh mục 3.5</a>
+                            </li>
+                            <li class="list__item list__item--has-sublist"><a class="list__link" href="#"
+                                    title="Mục 3.6">Danh mục 3.6</a>
+                                <div class="list__sublist-container">
+                                    <ul class="list">
+                                        <li class="list__item"><a class="list__link" href="#" title="Mục 3.6.1">Mục
+                                                3.6.1</a>
+                                        </li>
+                                        <li class="list__item"><a class="list__link" href="#" title="Mục 3.6.2">Mục
+                                                3.6.2</a>
+                                        </li>
+                                        <li class="list__item"><a class="list__link" href="#" title="Mục 3.6.3">Mục
+                                                3.6.3</a>
+                                        </li>
+                                        <li class="list__item"><a class="list__link" href="#" title="Mục 3.6.4">Mục
+                                                3.6.4</a>
+                                        </li>
+                                        <li class="list__item"><a class="list__link" href="#" title="Mục 3.6.5">Mục
+                                                3.6.5</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="list__item list__item--has-sublist"><a class="list__link" href="#" title="Đang chờ">Đang
+                        chờ</a>
+                    <div class="list__sublist-container">
+                        <ul class="list">
+                            <li class="list__item"><a class="list__link" href="#" title="Đang chờ 1">Đang chờ 1
+                                </a>
+                            </li>
+                            <li class="list__item"><a class="list__link" href="#" title="Đang chờ 2">Đang chờ 2</a>
+                            </li>
+                            <li class="list__item"><a class="list__link" href="#" title="Đang chờ 3">Đang chờ 3</a>
+                            </li>
+                            <li class="list__item"><a class="list__link" href="#" title="Đang chờ 4">Đang chờ 4</a>
+                            </li>
+                            <li class="list__item"><a class="list__link" href="#" title="Đang chờ 5">Đang chờ 5</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li class="list__item"><a class="list__link" href="#" title="Waiting...">Just a sec...</a>
+                </li>
+                <li class="list__item"><a class="list__link" href="#" title="Loading...">Loading...</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" type="text/javascript"> </script>
+    <script src="https://rawgit.com/kamens/jQuery-menu-aim/master/jquery.menu-aim.js" type="text/javascript"> </script>
+    <script src="https://unpkg.com/focus-visible" type="text/javascript"> </script>
+    <script>
+        const itemActiveClass = 'list__item--active';
+        $('.trigger').click(function () {
+            $(this).find('.burger').toggleClass('burger--active');
+            $('.navigation').toggleClass('navigation--active');
+        });
+        $('.list').menuAim({
+            activate: (row) => {
+                $(row).addClass(itemActiveClass);
+            },
+            deactivate: (row) => {
+                $(row).removeClass(itemActiveClass);
+            },
+            exitMenu: (menu) => {
+                return true;
+            }
+        });  
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js"
+        integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
